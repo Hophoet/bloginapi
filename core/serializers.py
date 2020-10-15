@@ -44,15 +44,10 @@ class CommentSerializer(serializers.ModelSerializer):
             'post'
         )
 
-class PostLikeSerializer(serializers.ModelSerializer):
+class PostLikeSerializer(serializers.Serializer):
     """ post liking model serialier """
-    class Meta:
-        """ post like model serializer Meta class """
-        model = PostLike
-        fields = (
-            'user',
-            'post'
-        )
+    post_id = serializers.IntegerField()
+   
 
 class CommentLikeSerializer(serializers.Serializer):
     """ comment like serializer """
