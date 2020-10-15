@@ -82,7 +82,7 @@ class AddCommentToPostView(APIView):
     serializer_class = CommentSerializer
     def post(self, request, *args, **kwargs):
         """ post request method """
-        post_id = kwargs.get('post_id')
+        post_id = request.data.get('post_id')
         post = get_object_or_404(Post, pk=post_id)
         user = request.user
         content = request.data.get('content')
@@ -92,15 +92,14 @@ class AddCommentToPostView(APIView):
             'post':post.pk
         }
         comment_serializer = self.serializer_class(data=data,
-                                                    context={'request':request})
-        if comment_serializer.is_valid(raise_exception=True):
-            
-            comment = comment_serializer.save()
-            # print('COMMENT', comment)
-            # print(post.comment_set.set)
-            # print(request.data)
-            post.comment_set.set((comment,))
-            return Response(comment_serializer.data)
+                                                    context={'request':request}
+                                                    )
+        comment_serializer.is_valid(raise_exception=True)
+        
+      
+        comment = comment_serializer.save()
+        post.comment_set.set((comment,))
+        return Response(comment_serializer.data)
 
 
 class TogglePostLikeView(APIView):
