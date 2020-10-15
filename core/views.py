@@ -109,32 +109,32 @@ class TogglePostLikeView(APIView):
     serializer_class = PostLikeSerializer
     def post(self, request, *args, **kwargs):
         """ post request method """
-        user = request.data.get('user')
-        post = request.data.get('post')
         post_like_serializer = self.serializer_class(data=request.data, context={'request':request})
-        if post_like_serializer.is_valid(raise_exception=True):
-            post_likes = PostLike.objects.filter(user=user, post=post)
-            # print(dir(post_likes), post_likes.count())
-            if post_likes.exists():
-                print('liked')
-                post_like = post_likes.first()
-                post_like.delete()
-                return Response(
-                    {
-                        'state': 'post disliked',
-                        'likes': post_likes.count(),
-                        'user': request.user.username
-                    }
-                    , status=200)
-
-            post_like_serializer.save()
+        post_like_serializer.is_valid(raise_exception=True)
+        post_id = request.data.get('post_id')
+        post = get_object_or_404(Post, pk=post_id)
+        user = request.user
+        post_likes = PostLike.objects.filter(user=user, post=post)
+        if post_likes.exists():
+            # print('liked')
+            post_like = post_likes.first()
+            post_like.delete()
             return Response(
                 {
-                    'state': 'post liked',
+                    'state': 'post disliked',
                     'likes': post_likes.count(),
                     'user': request.user.username
                 }
                 , status=200)
+
+        PostLike.objects.create(user=user, post=post)
+        return Response(
+            {
+                'state': 'post liked',
+                'likes': post_likes.count(),
+                'user': request.user.username
+            }
+            , status=200)
         
 
 class ToggleCommentLikeView(APIView):
