@@ -125,7 +125,7 @@ class TogglePostLikeView(APIView):
             return Response(
                 {
                     'state': 'post disliked',
-                    'likes': post_likes.count(),
+                    'likes': PostLike.objects.filter(post=post).count(),
                     'user': request.user.username
                 }
                 , status=200)
@@ -134,7 +134,7 @@ class TogglePostLikeView(APIView):
         return Response(
             {
                 'state': 'post liked',
-                'likes': post_likes.count(),
+                'likes':  PostLike.objects.filter(post=post).count(),
                 'user': request.user.username
             }
             , status=200)
