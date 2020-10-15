@@ -14,7 +14,7 @@ Category)
 #serializers
 from .serializers import (PostSerializer, CommentSerializer, 
     PostLikeSerializer, CommentLikeSerializer, PostEditSerializer,
-    CategorySerializer, PostDeleteSerializer)
+    CategorySerializer, PostDeleteSerializer, UserProfileSerializer)
 
 
 class PostListView(APIView):
@@ -238,3 +238,24 @@ class PostDeleteView(APIView):
         #delete post
         post.delete()
         return Response({'detail':('Post has been removed.')})
+
+class UserProfile(APIView):
+    """ user profile getter """
+    permission_classes = (IsAuthenticated, )
+    
+    def get(self, request, *args, **kwargs):
+        """ get request method """
+        name = request.user.username
+        post_count = Post.objects.filter(author=request.user).count()
+        like_count = PostLike.objects.filter(post__author=request.user).count()
+        comment_count = Comment.objects.filter(post__author=request.user).count()
+        user_profile_serializer_data = {
+            "name":name,
+            "post":post_count,
+            "like":like_count,
+            "comment":comment_count
+        }
+        user_profile_serializer = UserProfileSerializer(data=user_profile_serializer_data, context={'request':request})
+        user_profile_serializer.is_valid(raise_exception=True)
+        return Response(user_profile_serializer.data)
+    
