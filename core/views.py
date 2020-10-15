@@ -143,31 +143,35 @@ class ToggleCommentLikeView(APIView):
     serializer_class = CommentLikeSerializer
     def post(self, request, *args, **kwargs):
         """ post request method """
-        user = request.data.get('user')
-        comment = request.data.get('comment')
+        user = request.user
+        comment_id = request.data.get('comment_id')
+        comment = get_object_or_404(Comment, pk=comment_id)
         comment_like_serializer = self.serializer_class(data=request.data, context={'request':request})
-        if comment_like_serializer.is_valid(raise_exception=True):
-            comment_likes = CommentLike.objects.filter(user=user, comment=comment)
-            if comment_likes.exists():
-                # print('liked')
-                comment_like = comment_likes.first()
-                comment_like.delete()
-                return Response(
-                    {
-                        'state': 'comment disliked',
-                        'likes': comment_likes.count(),
-                        'user': request.user.username
-                    }
-                    , status=200)
-
-            comment_like_serializer.save()
+        comment_like_serializer.is_valid(raise_exception=True)
+        comment_likes = CommentLike.objects.filter(user=user, comment=comment)
+        if comment_likes.exists():
+            # print('liked')
+            comment_like = comment_likes.first()
+            comment_like.delete()
             return Response(
                 {
-                    'state': 'comment liked',
+                    'state': 'comment disliked',
                     'likes': comment_likes.count(),
                     'user': request.user.username
                 }
                 , status=200)
+
+        # comment_like_serializer.save()
+        CommentLike.objects.create(user=user, comment=comment)
+        return Response(
+            {
+                'state': 'comment liked',
+                'likes': comment_likes.count(),
+                'user': request.user.username
+            }
+            , status=200)
+
+        raise NotFound
 
 class PostIsLikedByUser(APIView):
     permission_classes = (IsAuthenticated,)
