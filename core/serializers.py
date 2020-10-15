@@ -9,7 +9,7 @@ class PostSerializer(serializers.ModelSerializer):
     """ post model serializer """
     class Meta:
         """ post model serializer Meta class """
-        model = Post 
+        model = Post
         fields = (
             'id',
             'title',
@@ -19,9 +19,8 @@ class PostSerializer(serializers.ModelSerializer):
             'image',
             # 'likes',
             # 'comments'
-        
         )
-#category model serializer 
+#category model serializer
 class CategorySerializer(serializers.ModelSerializer):
     """ category model serializer """
     class Meta:
@@ -80,3 +79,11 @@ class PostEditSerializer(serializers.Serializer):
 class PostDeleteSerializer(serializers.Serializer):
     """ post deleting serializer """
     post_id = serializers.IntegerField(label=('Post_id'))
+
+class UserProfileSerializer(serializers.Serializer):
+    """ user profile serializer """
+    post = serializers.IntegerField()
+    like = serializers.IntegerField()
+    comment = serializers.IntegerField()
+    name = serializers.CharField()
+    
