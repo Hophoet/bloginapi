@@ -110,6 +110,24 @@ media/
 *.db
 *.pid
 # django migrations 
-# **/migrations/**
-# !**/migrations
-# !**/migrations/__init__.py
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+
+#project config
+config
+
+#api
+apitest/
+apipackage/
+
+#config
+config.py
+
+#mdbap
+core/mdbapi/data
+
+#requirement root virtual env
+requir.txt 
+
+api/
