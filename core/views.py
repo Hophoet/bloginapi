@@ -7,9 +7,10 @@ from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.response import Response
 from rest_framework.views import APIView
 #models
-from .models import (Post, Comment, PostLike)
+from .models import (Post, Comment, PostLike, CommentLike)
 #serializers
-from .serializers import (PostSerializer, CommentSerializer, PostLikeSerializer)
+from .serializers import (PostSerializer, CommentSerializer, 
+    PostLikeSerializer, CommentLikeSerializer)
 
 
 class PostListView(APIView):
@@ -104,6 +105,39 @@ class TogglePostLikeView(APIView):
                 {
                     'state': 'post liked',
                     'likes': post_likes.count(),
+                    'user': request.user.username
+                }
+                , status=200)
+        
+
+
+
+class ToggleCommentLikeView(APIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CommentLikeSerializer
+    def post(self, request, *args, **kwargs):
+        user = request.data.get('user')
+        comment = request.data.get('comment')
+        comment_like_serializer = self.serializer_class(data=request.data, context={'request':request})
+        if comment_like_serializer.is_valid(raise_exception=True):
+            comment_likes = CommentLike.objects.filter(user=user, comment=comment)
+            if comment_likes.exists():
+                # print('liked')
+                comment_like = comment_likes.first()
+                comment_like.delete()
+                return Response(
+                    {
+                        'state': 'comment disliked',
+                        'likes': comment_likes.count(),
+                        'user': request.user.username
+                    }
+                    , status=200)
+
+            comment_like_serializer.save()
+            return Response(
+                {
+                    'state': 'comment liked',
+                    'likes': comment_likes.count(),
                     'user': request.user.username
                 }
                 , status=200)
