@@ -11,4 +11,5 @@ urlpatterns = [
     path('toggle-post-like/', views.TogglePostLikeView.as_view(), name='toggle_post_like'),
     path('toggle-comment-like/', views.ToggleCommentLikeView.as_view(), name='toggle_comment_like'),
     path('edit-post/', views.PostEditView.as_view(), name='post-edit'),
+    path('categories/', views.CategoryListView.as_view(), name='categories'),
 ]
