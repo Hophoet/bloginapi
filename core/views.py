@@ -13,7 +13,8 @@ Category)
 
 #serializers
 from .serializers import (PostSerializer, CommentSerializer, 
-    PostLikeSerializer, CommentLikeSerializer, PostEditSerializer)
+    PostLikeSerializer, CommentLikeSerializer, PostEditSerializer,
+    CategorySerializer)
 
 
 class PostListView(APIView):
@@ -22,6 +23,14 @@ class PostListView(APIView):
         posts_serializer = PostSerializer(posts, many=True)
         return Response(posts_serializer.data)
 
+
+class CategoryListView(APIView):
+    def get(self, request, *args, **kwargs):
+        categories = Category.objects.all()
+        categories_serializer = CategorySerializer(categories, many=True)
+        return Response(categories_serializer.data)
+
+
 class PostDetailView(APIView):
     def get(self, request, *args, **kwargs):
         post_id = kwargs.get('post_id')
@@ -29,8 +38,8 @@ class PostDetailView(APIView):
         post_serializer = PostSerializer(post)
         return Response(post_serializer.data)
 
+
 class PostCommentsView(APIView):
-    
     def get(self, request, *args, **kwargs): 
         try:
             post_id = kwargs.get('post_id')
@@ -81,6 +90,7 @@ class AddCommentToPostView(APIView):
             post.comment_set.set((comment,))
             return Response(comment_serializer.data)
 
+
 class TogglePostLikeView(APIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = PostLikeSerializer
@@ -112,8 +122,6 @@ class TogglePostLikeView(APIView):
                 }
                 , status=200)
         
-
-
 
 class ToggleCommentLikeView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -172,5 +180,4 @@ class PostEditView(APIView):
         post.save()
         #serializer
         post_serializer = PostSerializer(post)
-
         return Response(post_serializer.data)
