@@ -7,10 +7,13 @@ from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.response import Response
 from rest_framework.views import APIView
 #models
-from .models import (Post, Comment, PostLike, CommentLike)
+from .models import (Post, Comment, PostLike, CommentLike, 
+Category)
+
+
 #serializers
 from .serializers import (PostSerializer, CommentSerializer, 
-    PostLikeSerializer, CommentLikeSerializer)
+    PostLikeSerializer, CommentLikeSerializer, PostEditSerializer)
 
 
 class PostListView(APIView):
@@ -142,3 +145,32 @@ class ToggleCommentLikeView(APIView):
                 }
                 , status=200)
         
+
+class PostEditView(APIView):
+    """ post edit view """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = PostEditSerializer
+    def post(self, request, *args, **kwargs):
+        post_edit_serializer = self.serializer_class(data=request.data, context={'request':request})
+        post_edit_serializer.is_valid(raise_exception=True)
+        #get validated data
+        validated_data = post_edit_serializer.validated_data
+        title = validated_data.get('title')
+        content = validated_data.get('content')
+        category_id = validated_data.get('category')
+        image = validated_data.get('image')
+        post_id = validated_data.get('post')
+        #get objects
+        category = get_object_or_404(Category, pk=category_id)
+        #edit post
+        post = get_object_or_404(Post, pk=post_id)
+        post.title = title 
+        post.content = content 
+        post.image = image
+        post.category.clear()
+        post.category.set((category,))
+        post.save()
+        #serializer
+        post_serializer = PostSerializer(post)
+
+        return Response(post_serializer.data)
