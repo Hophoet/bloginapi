@@ -1,3 +1,5 @@
+""" core app django-admin management file """
+
 from django.contrib import admin
 from .models import (Post, Comment, Category, PostLike, CommentLike)
 # Register your models here.

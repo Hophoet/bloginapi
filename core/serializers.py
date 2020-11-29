@@ -1,10 +1,14 @@
+""" core add serializers modules """
+
 from rest_framework import serializers
 #models
 from .models import (Post, Category, Comment, PostLike, CommentLike)
 
-#post model serializer
+
 class PostSerializer(serializers.ModelSerializer):
+    """ post model serializer """
     class Meta:
+        """ post model serializer Meta class """
         model = Post 
         fields = (
             'id',
@@ -21,7 +25,7 @@ class PostSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     """ category model serializer """
     class Meta:
-        """ Meta class """
+        """ category model serializer Meta class """
         model = Category
         fields = (
             'id',
@@ -30,7 +34,9 @@ class CategorySerializer(serializers.ModelSerializer):
 
 #comment model serializer
 class CommentSerializer(serializers.ModelSerializer):
+    """ comment model serializer """
     class Meta:
+        """ comment model serializer Meta class """
         model = Comment
         fields = (
             'content',
@@ -40,7 +46,9 @@ class CommentSerializer(serializers.ModelSerializer):
         )
 
 class PostLikeSerializer(serializers.ModelSerializer):
+    """ post liking model serialier """
     class Meta:
+        """ post like model serializer Meta class """
         model = PostLike
         fields = (
             'user',
@@ -48,7 +56,9 @@ class PostLikeSerializer(serializers.ModelSerializer):
         )
 
 class CommentLikeSerializer(serializers.ModelSerializer):
+    """ comment liking model serializer """
     class Meta:
+        """ comment like model serializer Meta class """
         model = CommentLike
         fields = (
             'user',
@@ -56,6 +66,7 @@ class CommentLikeSerializer(serializers.ModelSerializer):
         )
 
 class PostEditSerializer(serializers.Serializer):
+    """ post editing serializer """
     title = serializers.CharField(label=('Title'))
     content = serializers.CharField(
         label=('Content'),
@@ -67,5 +78,5 @@ class PostEditSerializer(serializers.Serializer):
 
 
 class PostDeleteSerializer(serializers.Serializer):
+    """ post deleting serializer """
     post_id = serializers.IntegerField(label=('Post_id'))
-    

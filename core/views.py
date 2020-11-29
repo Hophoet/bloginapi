@@ -1,3 +1,5 @@
+""" core app views module """
+
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 #rest framework
@@ -9,8 +11,6 @@ from rest_framework.views import APIView
 #models
 from .models import (Post, Comment, PostLike, CommentLike, 
 Category)
-
-
 #serializers
 from .serializers import (PostSerializer, CommentSerializer, 
     PostLikeSerializer, CommentLikeSerializer, PostEditSerializer,
@@ -18,21 +18,27 @@ from .serializers import (PostSerializer, CommentSerializer,
 
 
 class PostListView(APIView):
+    """ posts listing view """
     def get(self, request, *args, **kwargs):
+        """ get request method """
         posts = Post.objects.all()
         posts_serializer = PostSerializer(posts, many=True)
         return Response(posts_serializer.data)
 
 
 class CategoryListView(APIView):
+    """ categories listing view """
     def get(self, request, *args, **kwargs):
+        """ post request method """
         categories = Category.objects.all()
         categories_serializer = CategorySerializer(categories, many=True)
         return Response(categories_serializer.data)
 
 
 class PostDetailView(APIView):
+    """ post detail view """
     def get(self, request, *args, **kwargs):
+        """ get request method """
         post_id = kwargs.get('post_id')
         post = get_object_or_404(Post, id=post_id)
         post_serializer = PostSerializer(post)
@@ -40,7 +46,9 @@ class PostDetailView(APIView):
 
 
 class PostCommentsView(APIView):
+    """ post comments listing view """
     def get(self, request, *args, **kwargs): 
+        """ get request method """
         try:
             post_id = kwargs.get('post_id')
             post = Post.objects.get(pk=post_id)
@@ -55,9 +63,11 @@ class PostCommentsView(APIView):
 
 
 class AddNewPostView(APIView):
+    """ add new post view """
     permission_classes = (IsAuthenticated,)
     serializer_class = PostSerializer
     def post(self, request, *args, **kwargs):
+        """ post request method """
         serializer = self.serializer_class(data=request.data,
                                             context={'request':request})
         if serializer.is_valid(raise_exception=True):
@@ -67,9 +77,11 @@ class AddNewPostView(APIView):
 
 
 class AddCommentToPostView(APIView):
+    """ add comment to post view """
     permission_classes = (IsAuthenticated,)
     serializer_class = CommentSerializer
     def post(self, request, *args, **kwargs):
+        """ post request method """
         post_id = kwargs.get('post_id')
         post = get_object_or_404(Post, pk=post_id)
         user = request.user
@@ -92,9 +104,11 @@ class AddCommentToPostView(APIView):
 
 
 class TogglePostLikeView(APIView):
+    """ post like toggle view """
     permission_classes = (IsAuthenticated,)
     serializer_class = PostLikeSerializer
     def post(self, request, *args, **kwargs):
+        """ post request method """
         user = request.data.get('user')
         post = request.data.get('post')
         post_like_serializer = self.serializer_class(data=request.data, context={'request':request})
@@ -124,9 +138,11 @@ class TogglePostLikeView(APIView):
         
 
 class ToggleCommentLikeView(APIView):
+    """ comment like toggling view """
     permission_classes = (IsAuthenticated,)
     serializer_class = CommentLikeSerializer
     def post(self, request, *args, **kwargs):
+        """ post request method """
         user = request.data.get('user')
         comment = request.data.get('comment')
         comment_like_serializer = self.serializer_class(data=request.data, context={'request':request})
@@ -155,10 +171,11 @@ class ToggleCommentLikeView(APIView):
         
 
 class PostEditView(APIView):
-    """ post edit view """
+    """ post editing view """
     permission_classes = (IsAuthenticated,)
     serializer_class = PostEditSerializer
     def post(self, request, *args, **kwargs):
+        """ post request method """
         post_edit_serializer = self.serializer_class(data=request.data, context={'request':request})
         post_edit_serializer.is_valid(raise_exception=True)
         #get validated data
@@ -188,10 +205,11 @@ class PostEditView(APIView):
         return Response(post_serializer.data)
 
 class PostDeleteView(APIView):
-    """ post delete view """
+    """ post deleting view """
     permission_classes = (IsAuthenticated,)
     serializer_class = PostDeleteSerializer
     def post(self, request, *args, **kwargs):
+        """ post request method """
         post_delete_serializer = self.serializer_class(data=request.data, context={'request':request})
         post_delete_serializer.is_valid(raise_exception=True)
         #get validated data
