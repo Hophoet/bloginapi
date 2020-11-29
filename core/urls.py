@@ -10,4 +10,5 @@ urlpatterns = [
     path('post/<int:post_id>/add-comment/', views.AddCommentToPostView.as_view(), name='add_comment_to_post'),
     path('toggle-post-like/', views.TogglePostLikeView.as_view(), name='toggle_post_like'),
     path('toggle-comment-like/', views.ToggleCommentLikeView.as_view(), name='toggle_comment_like'),
+    path('edit-post/', views.PostEditView.as_view(), name='post-edit'),
 ]
