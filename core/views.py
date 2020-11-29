@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 #rest framework
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.status import HTTP_404_NOT_FOUND
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -163,15 +163,20 @@ class PostEditView(APIView):
         post_edit_serializer.is_valid(raise_exception=True)
         #get validated data
         validated_data = post_edit_serializer.validated_data
+        post_id = validated_data.get('post')
+        post = get_object_or_404(Post, pk=post_id)
+        #check the authentificated user is the owner of the post
+        if not request.user == post.author:
+            raise PermissionDenied
+ 
         title = validated_data.get('title')
         content = validated_data.get('content')
         category_id = validated_data.get('categories')
         image = validated_data.get('image')
-        post_id = validated_data.get('post')
+        
         #get objects
         category = get_object_or_404(Category, pk=category_id)
         #edit post
-        post = get_object_or_404(Post, pk=post_id)
         post.title = title 
         post.content = content 
         post.image = image
