@@ -12,4 +12,5 @@ urlpatterns = [
     path('toggle-comment-like/', views.ToggleCommentLikeView.as_view(), name='toggle_comment_like'),
     path('edit-post/', views.PostEditView.as_view(), name='post-edit'),
     path('categories/', views.CategoryListView.as_view(), name='categories'),
+    path('delete-post/', views.PostDeleteView.as_view(), name='post-delete'),
 ]
