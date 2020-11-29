@@ -65,3 +65,7 @@ class PostEditSerializer(serializers.Serializer):
     image  = serializers.CharField(label=('Image'))
     post = serializers.IntegerField()
 
+
+class PostDeleteSerializer(serializers.Serializer):
+    post_id = serializers.IntegerField(label=('Post_id'))
+    
