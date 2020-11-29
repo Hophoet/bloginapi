@@ -10,7 +10,7 @@ class PostSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'content',
-            'category',
+            'categories',
             'timestamp',
             'image',
             # 'likes',
@@ -51,6 +51,6 @@ class PostEditSerializer(serializers.Serializer):
         label=('Content'),
         style={'input_type':'textarea'}
     )
-    category = serializers.IntegerField()
+    categories = serializers.IntegerField()
     image  = serializers.CharField(label=('Image'))
     post = serializers.IntegerField()

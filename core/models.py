@@ -21,7 +21,7 @@ class Post(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     image = models.CharField(max_length=500)
     author = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    category = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category)
 
     def __str__(self):
         return self.title

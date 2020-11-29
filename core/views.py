@@ -75,7 +75,7 @@ class AddCommentToPostView(APIView):
         if comment_serializer.is_valid(raise_exception=True):
             
             comment = comment_serializer.save()
-            print('COMMENT', comment)
+            # print('COMMENT', comment)
             # print(post.comment_set.set)
             # print(request.data)
             post.comment_set.set((comment,))
@@ -157,7 +157,7 @@ class PostEditView(APIView):
         validated_data = post_edit_serializer.validated_data
         title = validated_data.get('title')
         content = validated_data.get('content')
-        category_id = validated_data.get('category')
+        category_id = validated_data.get('categories')
         image = validated_data.get('image')
         post_id = validated_data.get('post')
         #get objects
@@ -167,8 +167,8 @@ class PostEditView(APIView):
         post.title = title 
         post.content = content 
         post.image = image
-        post.category.clear()
-        post.category.set((category,))
+        post.categories.clear()
+        post.categories.set((category,))
         post.save()
         #serializer
         post_serializer = PostSerializer(post)
