@@ -14,7 +14,7 @@ Category)
 #serializers
 from .serializers import (PostSerializer, CommentSerializer, 
     PostLikeSerializer, CommentLikeSerializer, PostEditSerializer,
-    CategorySerializer)
+    CategorySerializer, PostDeleteSerializer)
 
 
 class PostListView(APIView):
@@ -186,3 +186,21 @@ class PostEditView(APIView):
         #serializer
         post_serializer = PostSerializer(post)
         return Response(post_serializer.data)
+
+class PostDeleteView(APIView):
+    """ post delete view """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = PostDeleteSerializer
+    def post(self, request, *args, **kwargs):
+        post_delete_serializer = self.serializer_class(data=request.data, context={'request':request})
+        post_delete_serializer.is_valid(raise_exception=True)
+        #get validated data
+        validated_data = post_delete_serializer.validated_data
+        post_id = validated_data.get('post_id')
+        post = get_object_or_404(Post, pk=post_id)
+        #check authorization
+        if not post.author == request.user:
+            raise PermissionDenied
+        #delete post
+        post.delete()
+        return Response({'detail':('Post has been removed.')})
