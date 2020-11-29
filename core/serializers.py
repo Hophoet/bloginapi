@@ -17,6 +17,16 @@ class PostSerializer(serializers.ModelSerializer):
             # 'comments'
         
         )
+#category model serializer 
+class CategorySerializer(serializers.ModelSerializer):
+    """ category model serializer """
+    class Meta:
+        """ Meta class """
+        model = Category
+        fields = (
+            'id',
+            'name'
+        )
 
 #comment model serializer
 class CommentSerializer(serializers.ModelSerializer):
@@ -54,3 +64,4 @@ class PostEditSerializer(serializers.Serializer):
     categories = serializers.IntegerField()
     image  = serializers.CharField(label=('Image'))
     post = serializers.IntegerField()
+
