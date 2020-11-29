@@ -44,3 +44,13 @@ class CommentLikeSerializer(serializers.ModelSerializer):
             'user',
             'comment'
         )
+
+class PostEditSerializer(serializers.Serializer):
+    title = serializers.CharField(label=('Title'))
+    content = serializers.CharField(
+        label=('Content'),
+        style={'input_type':'textarea'}
+    )
+    category = serializers.IntegerField()
+    image  = serializers.CharField(label=('Image'))
+    post = serializers.IntegerField()
