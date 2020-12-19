@@ -168,6 +168,22 @@ class ToggleCommentLikeView(APIView):
                     'user': request.user.username
                 }
                 , status=200)
+
+class PostIsLikedByUser(APIView):
+    permission_classes = (IsAuthenticated,)
+    def post(self, request, *args, **kwargs):
+        """ post request method """
+        post_id = request.data.get('post_id')
+        if not post_id:
+            return Response(status=404, data={'detail':'post id not provided!'})
+        post = get_object_or_404(Post, pk=post_id)
+        user = request.user 
+        post_like = PostLike.objects.filter(user=user, post=post)
+        if(post_like):
+            return Response(data={'post_is_liked':True},status=200)
+        return Response(data={'post_is_liked':False},status=200)
+
+
         
 
 class PostEditView(APIView):
