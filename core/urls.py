@@ -15,4 +15,6 @@ urlpatterns = [
     path('edit-post/', views.PostEditView.as_view(), name='post-edit'),
     path('categories/', views.CategoryListView.as_view(), name='categories'),
     path('delete-post/', views.PostDeleteView.as_view(), name='post-delete'),
+    path('post-is-liked/', views.PostIsLikedByUser.as_view(), name='post-is-liked'),
+    
 ]
