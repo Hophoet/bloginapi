@@ -5,21 +5,16 @@ from rest_framework import serializers
 from .models import (Post, Category, Comment, PostLike, CommentLike)
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.Serializer):
     """ post model serializer """
-    class Meta:
-        """ post model serializer Meta class """
-        model = Post
-        fields = (
-            'id',
-            'title',
-            'content',
-            'categories',
-            'timestamp',
-            'image',
-            # 'likes',
-            # 'comments'
-        )
+    title = serializers.CharField()
+    content = serializers.CharField()
+    categories = serializers.ListField()
+    timestamp = serializers.DateTimeField()
+    image = serializers.URLField()
+    like = serializers.IntegerField()
+    comments = serializers.ListField()
+
 #category model serializer
 class CategorySerializer(serializers.ModelSerializer):
     """ category model serializer """
