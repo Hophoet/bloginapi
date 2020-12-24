@@ -16,13 +16,17 @@ from .serializers import (PostSerializer, CommentSerializer,
     PostLikeSerializer, CommentLikeSerializer, PostEditSerializer,
     CategorySerializer, PostDeleteSerializer, UserProfileSerializer)
 
+from .functions import serialize_posts
 
 class PostListView(APIView):
     """ posts listing view """
     def get(self, request, *args, **kwargs):
         """ get request method """
         posts = Post.objects.all()
-        posts_serializer = PostSerializer(posts, many=True)
+        serialize_posts_generator = serialize_posts(request, posts)
+        serialier_posts_from_generator = next(serialize_posts_generator)
+        posts_serializer = PostSerializer(data=serialier_posts_from_generator, many=True)
+        posts_serializer.is_valid(raise_exception=True)
         return Response(posts_serializer.data)
 
 
