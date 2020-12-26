@@ -14,6 +14,7 @@ def serialize_posts(request, posts):
         post_categories = [post.get('name') for post in post.categories.values()]
     
         postData = {
+            "id":post.id,
             "title":post.title,
             "content":post.content,
             "timestamp":post.timestamp,
