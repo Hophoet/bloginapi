@@ -7,6 +7,7 @@ from .models import (Post, Category, Comment, PostLike, CommentLike)
 
 class PostSerializer(serializers.Serializer):
     """ post model serializer """
+    id = serializers.IntegerField()
     title = serializers.CharField()
     content = serializers.CharField()
     categories = serializers.ListField()
